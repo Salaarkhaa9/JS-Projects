@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product & Task List</title>
+    <style>
+        /* Product Section Styles */
+        main.product-section {
+            background: #f9f9f9;
+            border: 1px solid #ccc;
+            padding: 20px;
+            display: flex;
+            align-items: flex-start;
+            max-width: 700px;
+            margin: 30px auto 40px auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        }
+
+        .product-image {
+            max-width: 40%;
+            height: auto;
+            margin-right: 30px;
+            border-radius: 6px;
+            object-fit: cover;
+            border: 1px solid #eee;
+        }
+
+        .product-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .product-info h2 {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .product-info p {
+            margin: 0;
+            color: #444;
+            line-height: 1.5;
+        }
+
+        .product-price {
+            color: #d35400;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .product-info button {
+            background: #3498db;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .product-info button:hover {
+            background: #217dbb;
+        }
+
+        /* Task App Styles (minimal, for clarity) */
+        .task-app {
+            max-width: 500px;
+            margin: 0 auto 40px auto;
+            padding: 20px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        }
+
+        .task-app h1 {
+            margin-top: 0;
+        }
+
+        .task-app input,
+        .task-app select {
+            padding: 7px;
+            margin-right: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+        }
+
+        .task-app button {
+            display: flex;
+            margin-top: 10px;
+            background: #27ae60;
+            color: #fff;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .task-app button:hover {
+            background: #1e874b;
+        }
+
+        #task-list {
+            margin-top: 18px;
+            padding-left: 20px;
+        }
+
+        #task-list li {
+            margin-bottom: 8px;
+        }
+
+        #stats {
+            margin-top: 18px;
+            color: #555;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="task-app">
+        <h1>My Tasks</h1>
+        <input type="text" id="task-input" placeholder="Add a new task...">
+        <select id="priority-select">
+            <option value="low">Low</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High</option>
+        </select>
+        <button id="add-task-btn">Add Task</button>
+        <button id="delete-task-btn">Delete Task</button>
+        <ul id="task-list">
+        </ul>
+        <p id="stats">Total tasks: 0 | High priority: 0</p>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const taskInput = document.getElementById('task-input');
+            const prioritySelect = document.getElementById('priority-select');
+            const addTaskBtn = document.getElementById('add-task-btn');
+            const deleteTaskBtn = document.getElementById('delete-task-btn');
+            const taskList = document.getElementById('task-list');
+            const stats = document.getElementById('stats');
+
+            function updateStats() {
+                const tasks = taskList.querySelectorAll('li');
+                const total = tasks.length;
+                let highCount = 0;
+                tasks.forEach(li => {
+                    if (li.getAttribute('data-priority') === 'high') highCount++;
+                });
+                stats.textContent = `Total tasks: ${total} | High priority: ${highCount}`;
+            }
+
+            addTaskBtn.addEventListener('click', function () {
+                const text = taskInput.value.trim();
+                const priority = prioritySelect.value;
+                if (!text) return;
+                const li = document.createElement('li');
+                // Capitalize priority for display
+                const priorityDisplay = priority.charAt(0).toUpperCase() + priority.slice(1);
+                li.textContent = `${text} [${priorityDisplay}]`;
+                li.setAttribute('data-priority', priority);
+                taskList.appendChild(li);
+                taskInput.value = '';
+                updateStats();
+            });
+            deleteTaskBtn.addEventListener('click', function () {
+                const tasks = taskList.querySelectorAll('li');
+                tasks.forEach(li => {
+                    li.remove();
+                });
+                updateStats();
+            });
+        });
+    </script>
+</body>
+
+</html>
